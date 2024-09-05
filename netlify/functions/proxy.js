@@ -1,6 +1,6 @@
-import axios from 'axios';
+const axios = require('axios');
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   const url = event.queryStringParameters?.url;
   if (!url) {
     return {
@@ -13,9 +13,9 @@ export const handler = async (event) => {
     const response = await axios.get(url);
     return {
       statusCode: 200,
-      body: response.data, // Devuelve el HTML directamente
+      body: JSON.stringify(response.data),
       headers: {
-        'Content-Type': 'text/html', // Cambia a 'text/html'
+        'Content-Type': 'application/json',
       },
     };
   } catch (error) {
