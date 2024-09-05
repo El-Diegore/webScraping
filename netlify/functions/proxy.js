@@ -1,35 +1,22 @@
-// netlify/functions/proxy.js
+import { extract } from 'https://esm.sh/@extractus/article-extractor';
+import { json, Router } from 'express'; // Asegúrate de importar `json` de `express` si estás usando Express
+import cors from 'cors';
 
-import axios from 'axios';
+const router = Router();
+router.use(cors());
 
-export async function handler(event, context) {
-    const url = event.queryStringParameters.url;
-
+router.get('/fetch', async (req, res) => {
+    const url = req.query.url;
     if (!url) {
-        return {
-            statusCode: 400,
-            body: 'URL query parameter is required',
-        };
+        return res.status(400).send('URL query parameter is required');
     }
-
     try {
-        const response = await axios.get(url);
-        return {
-            statusCode: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(response.data),
-        };
+        const article = await extract(url); // Usa extract directamente en el proxy
+        res.json(article); // Enviar la respuesta en formato JSON
     } catch (error) {
         console.error('Error fetching data from URL:', error.message);
-        return {
-            statusCode: 500,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: 'Error fetching data',
-        };
+        res.status(500).send('Error fetching data');
     }
-}
+});
+
+export default router;

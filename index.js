@@ -1,6 +1,4 @@
 // index.js (ES6 module)
-import { extract } from 'https://esm.sh/@extractus/article-extractor';
-
 document.getElementById('extractButton').addEventListener('click', async () => {
     const url = document.getElementById('urlInput').value;
     const resultDiv = document.getElementById('result');
@@ -12,8 +10,10 @@ document.getElementById('extractButton').addEventListener('click', async () => {
 
     try {
         // Usa el proxy para hacer la solicitud
-        const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
-        const article = await extract(proxyUrl);
+        const proxyUrl = `/functions/proxy?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        const article = await response.json();
+
         if (article) {
             resultDiv.innerHTML = `
                 <h2>${article.title}</h2>
