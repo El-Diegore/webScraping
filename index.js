@@ -11,28 +11,26 @@ document.getElementById('extractButton').addEventListener('click', async () => {
     try {
         const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
         const response = await fetch(proxyUrl);
-        const data = await response.json();  // Asegúrate de que la respuesta sea JSON
-        let article;
-        
-        try {
-            article = await extract(data);
-        } catch (extractError) {
-            console.error('Error al extraer el artículo', extractError);
-            resultDiv.innerHTML = '<p>Error al extraer el artículo.</p>';
-            return;
-        }
+        const data = await response.json(); // Asegúrate de que la respuesta sea JSON
 
-        if (article) {
-            resultDiv.innerHTML = `
-                <h2>${article.title}</h2>
-                <p>${article.content}</p>
-            `;
+        // Verifica si la respuesta contiene HTML y es una cadena
+        if (typeof data.html === 'string') {
+            const article = await extract(data.html);
+
+            if (article) {
+                resultDiv.innerHTML = `
+                    <h2>${article.title}</h2>
+                    <p>${article.content}</p>
+                `;
+            } else {
+                resultDiv.innerHTML = '<p>No se pudo extraer ningún artículo.</p>';
+            }
         } else {
-            resultDiv.innerHTML = '<p>No se pudo extraer ningún artículo.</p>';
+            resultDiv.innerHTML = '<p>Respuesta no contiene HTML.</p>';
         }
     } catch (error) {
-        console.error('Error al obtener los datos del proxy', error);
-        resultDiv.innerHTML = '<p>Hubo un error al obtener los datos.</p>';
+        console.error('Error al extraer el artículo', error);
+        resultDiv.innerHTML = '<p>Hubo un error al extraer el artículo.</p>';
     } finally {
         loadingDiv.style.display = 'none';
     }

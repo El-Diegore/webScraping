@@ -24,7 +24,7 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ html: cleanedHtml }), // Devolver HTML envuelto en JSON
+      body: JSON.stringify({ html: cleanedHtml }), // Asegúrate de que el HTML esté en JSON
       headers: {
         'Content-Type': 'application/json',
       },
@@ -33,7 +33,10 @@ export const handler = async (event) => {
     console.error('Error fetching data from URL:', error.message);
     return {
       statusCode: 500,
-      body: 'Error fetching data',
+      body: JSON.stringify({ error: 'Error fetching data' }), // Devolver un JSON en caso de error
+      headers: {
+        'Content-Type': 'application/json',
+      },
     };
   }
 };
