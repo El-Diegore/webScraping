@@ -1,7 +1,7 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
-const handler = async (event) => {
+export const handler = async (event) => {
   const url = event.queryStringParameters?.url;
   if (!url) {
     return {
@@ -12,20 +12,21 @@ const handler = async (event) => {
 
   try {
     const response = await axios.get(url);
-    const html = response.data;
-    const $ = cheerio.load(html);
+    const $ = cheerio.load(response.data);
 
     // Limitar el tamaño de las imágenes
-    $('img').each((i, el) => {
-      $(el).css('max-width', '100%');
-      $(el).css('height', 'auto');
+    $('img').each((i, img) => {
+      $(img).attr('style', 'max-width: 100%; height: auto;');
     });
+
+    // Limitar el tamaño del contenido HTML
+    const cleanedHtml = $.html();
 
     return {
       statusCode: 200,
-      body: $.html(),
+      body: JSON.stringify({ html: cleanedHtml }), // Devolver HTML envuelto en JSON
       headers: {
-        'Content-Type': 'text/html',
+        'Content-Type': 'application/json',
       },
     };
   } catch (error) {
@@ -36,5 +37,3 @@ const handler = async (event) => {
     };
   }
 };
-
-module.exports = { handler };
