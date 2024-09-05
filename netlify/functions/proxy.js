@@ -1,5 +1,4 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
 
 export const handler = async (event) => {
   const url = event.queryStringParameters?.url;
@@ -24,9 +23,9 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ html: cleanedHtml }), // Asegúrate de que el HTML esté en JSON
+      body: response.data, // Devuelve el HTML directamente
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/html', // Cambia a 'text/html'
       },
     };
   } catch (error) {
