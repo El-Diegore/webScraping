@@ -1,6 +1,8 @@
-const axios = require('axios');
+// netlify/functions/proxy.js
 
-exports.handler = async function(event, context) {
+import { get } from 'axios';
+
+export async function handler(event, context) {
     const url = event.queryStringParameters.url;
 
     if (!url) {
@@ -11,16 +13,23 @@ exports.handler = async function(event, context) {
     }
 
     try {
-        const response = await axios.get(url);
+        const response = await get(url);
         return {
             statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(response.data),
         };
     } catch (error) {
         console.error('Error fetching data from URL:', error.message);
         return {
             statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
             body: 'Error fetching data',
         };
     }
-};
+}

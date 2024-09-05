@@ -1,6 +1,7 @@
 [build]
-    command = "npm run build"  # El comando para construir tu proyecto
-    publish = "."  
+  command = "echo No build command needed"
+  publish = "."
+
 [[redirects]]
   from = "/fetch/*"
   to = "/.netlify/functions/proxy?url=:splat"
