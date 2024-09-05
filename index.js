@@ -11,11 +11,14 @@ document.getElementById('extractButton').addEventListener('click', async () => {
     try {
         const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
         const response = await fetch(proxyUrl);
-        const data = await response.json(); // Asegúrate de que la respuesta sea JSON
 
-        // Verifica si la respuesta contiene HTML y es una cadena
-        if (typeof data.html === 'string') {
-            const article = await extract(data.html);
+        // Verifica si la respuesta es correcta
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const htmlData = await response.text(); // Usa .text() para obtener el HTML
+        const article = await extract(htmlData); // Pasa el HTML a `extract`
 
             if (article) {
                 resultDiv.innerHTML = `
