@@ -1,18 +1,18 @@
-// index.js (ES6 module)
+import { extract } from 'https://esm.sh/@extractus/article-extractor';
+
 document.getElementById('extractButton').addEventListener('click', async () => {
     const url = document.getElementById('urlInput').value;
     const resultDiv = document.getElementById('result');
     const loadingDiv = document.getElementById('loading');
     
-    // Muestra el indicador de carga
     loadingDiv.style.display = 'block';
     resultDiv.innerHTML = '';
 
     try {
-        // Usa el proxy para hacer la solicitud
-        const proxyUrl = `/functions/proxy?url=${encodeURIComponent(url)}`;
+        const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
         const response = await fetch(proxyUrl);
-        const article = await response.json();
+        const data = await response.json(); // Asegúrate de que la respuesta sea JSON
+        const article = await extract(data);
 
         if (article) {
             resultDiv.innerHTML = `
@@ -26,7 +26,6 @@ document.getElementById('extractButton').addEventListener('click', async () => {
         console.error('Error al extraer el artículo', error);
         resultDiv.innerHTML = '<p>Hubo un error al extraer el artículo.</p>';
     } finally {
-        // Oculta el indicador de carga
         loadingDiv.style.display = 'none';
     }
 });
