@@ -13,9 +13,9 @@ export const handler = async (event) => {
     const response = await axios.get(url);
     return {
       statusCode: 200,
-      body: JSON.stringify(response.data),
+      body: response.data, // Devuelve el HTML directamente
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/html', // Cambia a 'text/html'
       },
     };
   } catch (error) {

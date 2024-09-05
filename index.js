@@ -11,8 +11,14 @@ document.getElementById('extractButton').addEventListener('click', async () => {
     try {
         const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
         const response = await fetch(proxyUrl);
-        const data = await response.json(); // Asegúrate de que la respuesta sea JSON
-        const article = await extract(data);
+
+        // Verifica si la respuesta es correcta
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const htmlData = await response.text(); // Usa .text() para obtener el HTML
+        const article = await extract(htmlData); // Pasa el HTML a `extract`
 
         if (article) {
             resultDiv.innerHTML = `
