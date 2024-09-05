@@ -6,7 +6,10 @@ export const handler = async (event) => {
   if (!url) {
     return {
       statusCode: 400,
-      body: 'URL query parameter is required',
+      body: JSON.stringify({ error: 'URL query parameter is required' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     };
   }
 
@@ -19,7 +22,6 @@ export const handler = async (event) => {
       $(img).attr('style', 'max-width: 100%; height: auto;');
     });
 
-    // Limitar el tamaño del contenido HTML
     const cleanedHtml = $.html();
 
     return {
@@ -40,3 +42,4 @@ export const handler = async (event) => {
     };
   }
 };
+
