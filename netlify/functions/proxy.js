@@ -1,6 +1,6 @@
-import axios from 'axios';
+const axios = require('axios');
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   const url = event.queryStringParameters?.url;
   if (!url) {
     return {
@@ -11,31 +11,18 @@ export const handler = async (event) => {
 
   try {
     const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
-
-    // Limitar el tamaño de las imágenes
-    $('img').each((i, img) => {
-      $(img).attr('style', 'max-width: 100%; height: auto;');
-    });
-
-    // Limitar el tamaño del contenido HTML
-    const cleanedHtml = $.html();
-
     return {
       statusCode: 200,
-      body: response.data, // Devuelve el HTML directamente
+      body: JSON.stringify(response.data),
       headers: {
-        'Content-Type': 'text/html', // Cambia a 'text/html'
+        'Content-Type': 'application/json',
       },
     };
   } catch (error) {
     console.error('Error fetching data from URL:', error.message);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Error fetching data' }), // Devolver un JSON en caso de error
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: 'Error fetching data',
     };
   }
 };
