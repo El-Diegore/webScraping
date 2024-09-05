@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "netlify": "netlify",
-    "build": "react-scripts build"
+    "build": "echo 'No build command needed'"
   },
   "keywords": [],
   "author": "",
