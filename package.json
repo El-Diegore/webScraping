@@ -15,6 +15,7 @@
     "@extractus/article-extractor": "^8.0.10",
     "@netlify/functions": "^2.8.1",
     "axios": "^1.7.7",
+    "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "serverless-http": "^3.2.0"

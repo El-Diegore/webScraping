@@ -1,6 +1,7 @@
 const axios = require('axios');
+const cheerio = require('cheerio');
 
-exports.handler = async (event) => {
+const handler = async (event) => {
   const url = event.queryStringParameters?.url;
   if (!url) {
     return {
@@ -11,11 +12,20 @@ exports.handler = async (event) => {
 
   try {
     const response = await axios.get(url);
+    const html = response.data;
+    const $ = cheerio.load(html);
+
+    // Limitar el tamaño de las imágenes
+    $('img').each((i, el) => {
+      $(el).css('max-width', '100%');
+      $(el).css('height', 'auto');
+    });
+
     return {
       statusCode: 200,
-      body: JSON.stringify(response.data),
+      body: $.html(),
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/html',
       },
     };
   } catch (error) {
@@ -26,3 +36,5 @@ exports.handler = async (event) => {
     };
   }
 };
+
+module.exports = { handler };
