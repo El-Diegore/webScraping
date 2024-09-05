@@ -1,6 +1,6 @@
 // netlify/functions/proxy.js
 
-import { get } from 'axios';
+import axios from 'axios';
 
 export async function handler(event, context) {
     const url = event.queryStringParameters.url;
@@ -13,7 +13,7 @@ export async function handler(event, context) {
     }
 
     try {
-        const response = await get(url);
+        const response = await axios.get(url);
         return {
             statusCode: 200,
             headers: {

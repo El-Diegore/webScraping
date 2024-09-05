@@ -1,12 +1,6 @@
 [build]
-  command = "echo No build command needed"
+  command = "echo 'No build command needed'"
   publish = "."
-
-[[redirects]]
-  from = "/fetch/*"
-  to = "/.netlify/functions/proxy?url=:splat"
-  status = 200
-  force = true
 
 [functions]
   directory = "netlify/functions"

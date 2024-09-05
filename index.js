@@ -12,7 +12,7 @@ document.getElementById('extractButton').addEventListener('click', async () => {
 
     try {
         // Usa el proxy para hacer la solicitud
-        const proxyUrl = `http://localhost:3000/fetch?url=${encodeURIComponent(url)}`;
+        const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
         const article = await extract(proxyUrl);
         if (article) {
             resultDiv.innerHTML = `
